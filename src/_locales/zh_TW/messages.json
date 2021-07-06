@@ -52,7 +52,8 @@
     "lblDefinitions": { "message": "全部釋義" },
     "lblSentence": { "message": "原句筆記" },
     "lblUrl": { "message": "來源網址" },
-    "lblAudio": { "message": "音頻文件" },
+    "lblAudio_us": { "message": "音頻文件(美)" },
+    "lblAudio_uk": { "message": "音頻文件(英)" },
 
     "lblUdfScripts": { "message": "自選腳本名稱" },
     "lblSysScripts": { "message": "系統腳本名稱" },

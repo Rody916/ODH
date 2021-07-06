@@ -99,16 +99,23 @@ class ODHBack {
             note.fields[options[fieldname]] = notedef[fieldname];
         }
 
-        if (options.audio && notedef.audios.length > 0) {
-            note.fields[options.audio] = '';
+        if (options.audio_us && notedef.audios.length > 0) {
+            note.fields[options.audio_us] = '';
+            note.fields[options.audio_uk] = '';
             let audionumber = Number(options.preferredaudio);
             audionumber = (audionumber && notedef.audios[audionumber]) ? audionumber : 0;
-            let audiofile = notedef.audios[audionumber];
-            note.audio = {
-                'url': audiofile,
-                'filename': `ODH_${options.dictSelected}_${encodeURIComponent(notedef.expression)}_${audionumber}.mp3`,
-                'fields': [options.audio]
-            };
+            let audiofile_us = notedef.audios[1];
+            let audiofile_uk = notedef.audios[0];
+            note.audio = [{
+                'url': audiofile_uk,
+                'filename': `ODH_${options.dictSelected}_${encodeURIComponent(notedef.expression)}_0.mp3`,
+                'fields': [options.audio_uk]
+            },
+            {
+                'url': audiofile_us,
+                'filename': `ODH_${options.dictSelected}_${encodeURIComponent(notedef.expression)}_1.mp3`,
+                'fields': [options.audio_us]
+            }];
         }
 
         return note;

@@ -222,8 +222,10 @@ class ODHFront {
             let audiosegment = '';
             if (note.audios) {
                 for (const [dindex, audio] of note.audios.entries()) {
-                    if (audio)
-                        audiosegment += `<img class="odh-playaudio" data-nindex="${nindex}" data-dindex="${dindex}" src="${chrome.runtime.getURL('fg/img/play.png')}"/>`;
+                    if (audio){
+                        let prefix = dindex==0?'英:':'美:';
+                        audiosegment += `${prefix}<img class="odh-playaudio" data-nindex="${nindex}" data-dindex="${dindex}" src="${chrome.runtime.getURL('fg/img/play.png')}"/>`;
+                    }            
                 }
             }
             content += `
