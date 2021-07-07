@@ -15,16 +15,21 @@ class ODHFront {
         this.popup = new Popup();
         this.timeout = null;
         this.mousemoved = false;
+        this.keysHeld = {'alt':false,'ctrl':false};
+        this.mouseHeld = false;
 
         window.addEventListener('mousemove', e => this.onMouseMove(e));
         window.addEventListener('mousedown', e => this.onMouseDown(e));
+        window.addEventListener('mouseup', e => this.onMouseUp(e));
         window.addEventListener('dblclick', e => this.onDoubleClick(e));
+
         window.addEventListener('keydown', e => this.onKeyDown(e));
+        window.addEventListener('keyup', e => this.onKeyUp(e));
 
         chrome.runtime.onMessage.addListener(this.onBgMessage.bind(this));
         window.addEventListener('message', e => this.onFrameMessage(e));
-        document.addEventListener('selectionchange', e => this.userSelectionChanged(e));
-        //window.addEventListener('selectionend', e => this.onSelectionEnd(e));
+        // document.addEventListener('selectionchange', e => this.userSelectionChanged(e));
+
     }
 
     onKeyDown(e) {
@@ -33,6 +38,16 @@ class ODHFront {
 
         if (!isValidElement())
             return;
+
+        if((e.keyCode === 18 || e.charCode === 18))this.keysHeld.alt=true;
+        if((e.keyCode === 17 || e.charCode === 17))this.keysHeld.ctrl=true;
+        if(this.keysHeld.alt&&this.keysHeld.ctrl){
+            this.timeout = setTimeout(() => {
+                this.onSelectionEnd(e);
+                //var selEndEvent = new CustomEvent('selectionend');
+                //window.dispatchEvent(selEndEvent);
+            }, 500);
+        }
 
         if (this.enabled && this.point !== null && (e.keyCode === this.activateKey || e.charCode === this.activateKey)) {
             const range = rangeFromPoint(this.point);
@@ -47,26 +62,39 @@ class ODHFront {
             this.popup.hide();
     }
 
+    onKeyUp(e) {
+        if((e.keyCode === 18 || e.charCode === 18))this.keysHeld.alt=false;
+        if((e.keyCode === 17 || e.charCode === 17))this.keysHeld.ctrl=false;
+    }
+
     onDoubleClick(e) {
         if (!isValidElement())
             return;
-
-        if (this.timeout)
-            clearTimeout(this.timeout);
-        this.mousemoved = false;
-        this.onSelectionEnd(e);
+        this.point = {
+                x: e.clientX,
+                y: e.clientY,
+            };
+        this.mousemoved, this.mouseHeld = false;
     }
 
     onMouseDown(e) {
         this.popup.hide();
+        this.mouseHeld = true;
+    }
+    onMouseUp(e) {
+        if(this.mousemoved&&this.mouseHeld){
+            this.point = {
+                x: e.clientX,
+                y: e.clientY,
+            };
+            this.mousemoved, this.mouseHeld = false;
+        }
     }
 
     onMouseMove(e) {
+        if(this.mouseHeld){
         this.mousemoved = true;
-        this.point = {
-            x: e.clientX,
-            y: e.clientY,
-        };
+        }
     }
 
     userSelectionChanged(e) {
