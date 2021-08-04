@@ -36,8 +36,9 @@ class encn_Cambridge_tc {
                 return node.innerText.trim();
         }
 
-        let base = 'https://dictionary.cambridge.org/search/english-chinese-traditional/direct/?q=';
-        let url = base + encodeURIComponent(word);
+        let base = 'https://dictionary.cambridge.org/search/english-chinese-traditional/'
+        let queryBase = '?q=';
+        let url = base + encodeURIComponent(word) + queryBase + encodeURIComponent(word);
         let doc = '';
         try {
             let data = await api.fetch(url);
