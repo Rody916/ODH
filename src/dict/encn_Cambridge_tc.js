@@ -9,7 +9,7 @@ class encn_Cambridge_tc {
     async displayName() {
         let locale = await api.locale();
         if (locale.indexOf('CN') != -1) return '剑桥英汉双解(繁体)';
-        if (locale.indexOf('TW') != -1) return '劍橋英漢雙解(繁体)';
+        if (locale.indexOf('TW') != -1) return '劍橋英漢雙解(繁體)';
         return 'Cambridge EN->CN Dictionary (TC)';
     }
 
@@ -36,9 +36,8 @@ class encn_Cambridge_tc {
                 return node.innerText.trim();
         }
 
-        let base = 'https://dictionary.cambridge.org/search/english-chinese-traditional/'
-        let queryBase = '?q=';
-        let url = base + encodeURIComponent(word) + queryBase + encodeURIComponent(word);
+        let base = 'https://dictionary.cambridge.org/search/english-chinese-traditional/direct/?q=';
+        let url = base + encodeURIComponent(word)
         let doc = '';
         try {
             let data = await api.fetch(url);
